@@ -1,0 +1,83 @@
+package com.tmf.servlets;
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * Servlet implementation class loginservlet
+ */
+@WebServlet("/loginservlet")
+public class loginservlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor. 
+     */
+    public loginservlet() {
+        // TODO Auto-generated constructor stub
+    }
+
+	
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		Cookie ck[] =request.getCookies();
+		String userName = null;
+		if (ck != null) {
+	        for (Cookie c : ck) {
+	            if ("uname".equals(c.getName())) {
+	                userName = c.getValue();
+	               // break;
+	            }
+	        }
+	    }
+		
+		
+		User user = new User(userName, "Client", "", "");
+		request.setAttribute("loggedinUser", user);
+		RequestDispatcher rd=request.getRequestDispatcher("Userhomeservlet");
+		rd.forward(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String uname = request.getParameter("user_name");
+		String password = request.getParameter("password");
+		
+		Cookie ck=new Cookie("uname",uname);//creating cookie object  
+		response.addCookie(ck);
+		
+		if(uname.equals("admin")&&password.equals("admin")) {
+			System.out.println("Admin Login successful");
+			RequestDispatcher rd=request.getRequestDispatcher("Admindashboardservlet");  
+			User adminUser = new User("ADMIN", "Administrator", "9818253870", "admin@gmail.com");
+			
+			request.setAttribute("loggedinUser", adminUser);
+			
+			
+			
+	        rd.forward(request, response);  
+		}
+		else {
+		if(uname.equals("username") && password.equals("password")) {
+				System.out.println("user Login successful");
+				User user = new User(uname, "Client", "9121375506", uname+"@gmail.com");
+				request.setAttribute("loggedinUser", user);
+				
+				RequestDispatcher rd=request.getRequestDispatcher("UserHomeServlet");  
+		        rd.forward(request, response); 
+			}
+			else {
+				System.out.println("Login failed");
+				response.sendRedirect("login.jsp");
+			}
+		}
+		//doGet(request, response);
+	}}
