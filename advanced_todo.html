@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 8px 12px;
+            border: none;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #28a745;
+            color: white;
+        }
+
+        tr.completed {
+            text-decoration: line-through;
+            color: gray;
+            background-color: #e9ecef;
+        }
+
+        .delete-btn {
+            background: red;
+        }
+
+        .delete-btn:hover {
+            background: darkred;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>To-Do Manager</h2>
+
+    <div class="form-group">
+        <input type="text" id="taskName" placeholder="Task Name">
+    </div>
+
+    <div class="form-group">
+        <textarea id="description" placeholder="Task Description"></textarea>
+    </div>
+
+    <div class="form-group">
+        <select id="status">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <input type="datetime-local" id="targetDate">
+    </div>
+
+    <button id="addTodoBtn" onclick="addTask()">Add Task</button>
+    <button id="updateTodoBtn" onclick="updateTask()" disabled>Update Task</button>
+    <table id="taskTable">
+        <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Target Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="todoTableBody">
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.getElementById("updateTodoBtn").hidden=true;
+    function updateTask(){
+        console.log("TEST UPDATE");
+        var trEleList=document.getElementsByTagName("tr");
+        for(i=0;i<trEleList.length;i++){
+            if(trEleList[i].editFlag == true){
+                trEleList[i].children[0].textContent = document.getElementById("taskName").value;
+                trEleList[i].children[1].textContent = document.getElementById("description").value;
+                trEleList[i].children[2].textContent = document.getElementById("status").value;
+                trEleList[i].children[3].textContent = document.getElementById("targetDate").value;
+            }
+        }
+    }
+
+    function addTask() {
+        var taskName = document.getElementById("taskName").value;
+        var taskDesc = document.getElementById("description").value;
+        var taskStatus = document.getElementById("status").value;
+        var taskTargetDate = document.getElementById("targetDate").value;
+
+        var todoObj={};
+        todoObj.taskName=taskName;
+        todoObj.taskDesc=taskDesc;
+        todoObj.taskStatus=taskStatus;
+        todoObj.taskTargetDate = taskTargetDate;
+        var trEle = createTodoTrEle(todoObj);
+
+        var tableBodyEle = document.getElementById("todoTableBody");
+        tableBodyEle.appendChild(trEle);
+
+        restTodoForm();
+        // js versions-- ECMA script standards
+        // var p1 = {name:"satya",age:42, dob:"2020-20-4" }
+
+
+        // var trEle = "<tr>"+ 
+        //             "<td>" +taskName    +"</td>"+
+        //             "<td>" +taskDesc   +"</td>"+
+        //             "<td>" +taskStatus  +"</td>"+
+        //             "<td>" +taskTargetDate +"</td>"+
+        //             "</tr>";
+        
+        // var tableBodyEle = document.getElementById("todoTableBody");
+        // tableBodyEle.innerHTML=trEle;
+
+    }
+
+    function restTodoForm(){
+        document.getElementById("taskName").value ="";
+        document.getElementById("description").value="";
+        document.getElementById("status").value="";
+        document.getElementById("targetDate").value="";
+    }
+
+    function createTodoTrEle(todo){
+        // creating tr element
+        var trEle = document.createElement("tr");
+
+        //creating td elements
+        taskNameTdEle =  document.createElement("td");
+        taskNameTdEle.innerText = todo.taskName;
+        trEle.appendChild(taskNameTdEle);
+
+        taskDescTdEle = document.createElement("td");
+        taskDescTdEle.innerText = todo.taskDesc;
+        trEle.appendChild(taskDescTdEle);
+
+        taskStatusTdEle = document.createElement("td");
+        taskStatusTdEle.innerText = todo.taskStatus;
+        trEle.appendChild(taskStatusTdEle);
+
+        taskTargetDateTdEle = document.createElement("td");
+        taskTargetDateTdEle.innerText = todo.taskTargetDate;
+        trEle.appendChild(taskTargetDateTdEle);
+
+        //adding edit action button
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+
+        editBtn.addEventListener("click", function() {
+            console.log(editBtn);
+            document.getElementById("taskName").value = editBtn.parentElement.children[0].textContent;
+            document.getElementById("description").value = editBtn.parentElement.children[1].textContent;
+            document.getElementById("status").value = editBtn.parentElement.children[2].textContent;
+            document.getElementById("targetDate").value = editBtn.parentElement.children[3].textContent;
+            
+            //hide the add task button
+            document.getElementById("addTodoBtn").hidden=true;
+            document.getElementById("updateTodoBtn").hidden=false;
+
+            editBtn.parentElement["editFlag"]=true;
+
+            // enable update task button
+
+        });
+
+        trEle.appendChild(editBtn);
+        return trEle;
+
+    }
+
+    function toggleComplete(btn) {
+        
+    }
+
+    function deleteTask(btn) {
+        
+    }
+</script>
+
+</body>
+</html>
