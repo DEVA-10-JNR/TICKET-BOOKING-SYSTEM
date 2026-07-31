@@ -1,0 +1,91 @@
+import java.util.Scanner;
+
+public class Bankingprogram {
+	
+	static Scanner scanner = new Scanner (System.in);
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+double balance = 0;
+boolean isrunning=true;
+int choice;
+
+
+while(isrunning) {
+	System.out.print("************");
+	System.out.println("BANKING PROGRAM!!");
+	System.out.println("***********");
+
+	System.out.println("1.Deposit");
+	System.out.println("2.Widthdrawl");
+	System.out.println("3.Balance");
+	System.out.println("4.EXIT");
+
+	System.out.println("Enter your choice 1-4:");
+	choice = scanner.nextInt();
+	switch(choice){
+		case 1:
+			showbalance(balance);
+			break;
+		case 2:
+			balance+=deposited();
+			break;
+		case 3:
+			balance=balance - widthdraw(balance);
+			break;
+		case 4:
+			isrunning=false;
+			System.out.println("Thank you for choosing banking Program!!");
+			break;
+			default :
+				System.out.println("INVALID CHOICE!!!");
+				break;
+			
+	}
+}
+
+
+
+scanner.close();
+	}
+	
+	static void showbalance(double balance) {
+		System.out.println("Your balance is :" +balance);
+	}
+	
+	static double deposited() {
+		double amount;
+		
+		System.out.println("Enter the amount to be deposited");
+		amount = scanner.nextDouble();
+		
+		if(amount<0) {
+			System.out.println("Amount cannot be in negative");
+			return 0;
+		}else {
+			return amount;
+		}
+	}
+	
+	static double widthdraw(double balance) {
+		
+		double amount;
+		
+		System.out.println("Enter the amount to be widthdrawn");
+		amount = scanner.nextDouble();
+		
+		if(amount > balance) {
+			System.out.println("Insufficent Funds in your account balance!!");
+			return 0;
+		
+		}else if (amount<0) {
+			System.out.println("Amount cannot be in Negative");
+			return 0;
+		}else {
+			return amount;
+		}
+		
+		
+	}
+}
