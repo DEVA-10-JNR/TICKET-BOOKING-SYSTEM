@@ -1,0 +1,10 @@
+# Build files
+build/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Compiled Java files
+*.class
